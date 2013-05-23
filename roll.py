@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 #Constants
 class Const:
-	RUN = 1
+	RUN = 10000
 	DICE = 3
 	KEEP = 1
 	PRINTZ = False
@@ -117,6 +117,7 @@ def help():
 	print "This is a program that is used to roll kep ten dice\n"
 	print "Commands \n"
 	print "-h --help    Display commands\n"
+	print "-t --temp    Don't save to file just display\n"
 	print "-r --roll    Choose number of dice to roll\n"
 	print "-k --keep    Choose number of dice to keep\n"
 	print "-p --print   Output to stdout instead of file\n"
