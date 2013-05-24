@@ -15,6 +15,7 @@ class Const:
 	REROLL = 2
 	NONETEN = 3
 	TEMPORARY = False
+	WEIGHTING = 0
 
 
 def main(argv):
@@ -27,6 +28,11 @@ def main(argv):
 	fileout = Const.OUTPUT
 	escalation = Const.REROLL
 	temp = Const.TEMPORARY
+	weight = Const.WEIGHTING
+	percent = False
+	comparison = False
+	btarget = 0
+	ltarget = 100000
 
 #Initialize Buffers
 	runDist = {}
@@ -34,7 +40,8 @@ def main(argv):
 
 #Read the commandline arguements
 	try:
-		opts, args = getopt.getopt(argv, "htr:k:pn:o:e:", ["help", "temp", "roll=", "keep=", "print", "number=", "output="])
+		opts, args = getopt.getopt(argv,
+				"htl:b:cw:r:k:pn:o:e:", ["help", "temp", "less=", "better=", "percent", "weight=", "roll=", "keep=", "print", "number=", "output="])
 	except getopt.GetoptError:
 		usage()
 		sys.exit(2)
@@ -51,6 +58,14 @@ def main(argv):
 			printz = True
 		elif opt in ("-n", "--number"):
 			runs = int(arg)
+		elif opt in ("-l", "--less"):
+			comparison = True
+			percent = True
+			ltarget = int(arg)
+		elif opt in ("-b", "--better"):
+			comparison = True
+			percent = True
+			btarget = int(arg)
 		elif opt in ("-o", "--output"):
 			fileout = arg
 		elif opt in ("-t", "--temp"):
@@ -66,6 +81,10 @@ def main(argv):
 				print "Invalid arguement for exploding ten behaviour \n"
 				help()
 				sys.exit(4)
+		elif opt in ("-w", "--weight"):
+			weight = int(arg)
+		elif opt in ("-c", "--percent"):
+			percent = True
 	if keep > dice:
 		print "Can't have keep be more than the number of dice you roll \n"
 		usage()
@@ -90,8 +109,19 @@ def main(argv):
 		sortz = sorted(currentRun, reverse=True)
 		for k in xrange(keep):
 			result += sortz[k]
-		runDist[result] = runDist.get(result, 0) + 1
+		result += weight
+		if percent:
+			increment = float(1.0 / runs)
+		else:
+			increment = int(1)
+		runDist[result] = runDist.get(result, 0) + increment
 		currentRun = []
+	if comparison:
+		odds = 0
+		for i in runDist:
+			if i >= btarget and i <= ltarget:
+				odds += runDist[i]
+		print odds
 	if printz:
 		print runDist
 	else:
@@ -114,7 +144,7 @@ def main(argv):
 
 #Functions to help people trying to learn how to use the command
 def help():
-	print "This is a program that is used to roll kep ten dice\n"
+	print "This is a program that is used to roll keep ten dice\n"
 	print "Commands \n"
 	print "-h --help    Display commands\n"
 	print "-t --temp    Don't save to file just display\n"
@@ -124,6 +154,10 @@ def help():
 	print "-n --number  Choose the number of times to do roll\n"
 	print "-o --output  Choose file to output to\n"
 	print "-e [e/r/n]   Set behaviour of exploding tens. (E)xploding, (R)eroll, (N)one \n"
+	print "-w --weight  Add weight to the end result. Essentially the +X of the roll \n"
+	print "-c --percent Show results in percentages.\n"
+	print "-b --better  Show chance that you roll equal to or greater than value.\n"
+	print "-l --less    Show change that you will roll less than or equal to value.\n"
 def usage():
 	print "You are not using the proper format for input\n"
 	help()
