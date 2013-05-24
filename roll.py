@@ -89,6 +89,11 @@ def main(argv):
 		print "Can't have keep be more than the number of dice you roll \n"
 		usage()
 		sys.exit(5)
+	increment = 0
+	if percent:
+		increment = float(1.0 / runs)
+	else:
+		increment = int(1)
 	for i in xrange(runs):
 		toroll = dice
 		k = 0
@@ -110,10 +115,6 @@ def main(argv):
 		for k in xrange(keep):
 			result += sortz[k]
 		result += weight
-		if percent:
-			increment = float(1.0 / runs)
-		else:
-			increment = int(1)
 		runDist[result] = runDist.get(result, 0) + increment
 		currentRun = []
 	if comparison:
@@ -147,17 +148,17 @@ def help():
 	print "This is a program that is used to roll keep ten dice\n"
 	print "Commands \n"
 	print "-h --help    Display commands\n"
-	print "-t --temp    Don't save to file just display\n"
 	print "-r --roll    Choose number of dice to roll\n"
 	print "-k --keep    Choose number of dice to keep\n"
-	print "-p --print   Output to stdout instead of file\n"
-	print "-n --number  Choose the number of times to do roll\n"
-	print "-o --output  Choose file to output to\n"
-	print "-e [e/r/n]   Set behaviour of exploding tens. (E)xploding, (R)eroll, (N)one \n"
-	print "-w --weight  Add weight to the end result. Essentially the +X of the roll \n"
+	print "-w --weight  Add weight to the end result. Essentially the +X of the roll.\n"
+	print "-e [e/r/n]   Set behaviour of exploding tens. (E)xploding, (R)eroll, (N)one\n"
+	print "-n --number  Choose the number of times to do roll (default 10000).\n"
 	print "-c --percent Show results in percentages.\n"
-	print "-b --better  Show chance that you roll equal to or greater than value.\n"
-	print "-l --less    Show change that you will roll less than or equal to value.\n"
+	print "-b --better  Show chance that you will roll equal to or greater than value.\n"
+	print "-l --less    Show chance that you will roll less than or equal to value.\n"
+	print "-p --print   Output to stdout instead of file .\n"
+	print "-o --output  Choose file to output to (default is output.png).\n"
+	print "-t --temp    Don't save to file just display\n"
 def usage():
 	print "You are not using the proper format for input\n"
 	help()
