@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 import sys
 import random
 import getopt
@@ -33,6 +36,7 @@ def main(argv):
 	comparison = False
 	btarget = 0
 	ltarget = 100000
+	wantaverage = False
 
 #Initialize Buffers
 	runDist = {}
@@ -40,8 +44,7 @@ def main(argv):
 
 #Read the commandline arguements
 	try:
-		opts, args = getopt.getopt(argv,
-				"htl:b:cw:r:k:pn:o:e:", ["help", "temp", "less=", "better=", "percent", "weight=", "roll=", "keep=", "print", "number=", "output="])
+		opts, args = getopt.getopt(argv, "htvl:b:cw:r:k:pn:o:e:", ["help", "temp", "average", "less=", "better=", "percent", "weight=", "roll=", "keep=", "print", "number=", "output="])
 	except getopt.GetoptError:
 		usage()
 		sys.exit(2)
@@ -85,11 +88,14 @@ def main(argv):
 			weight = int(arg)
 		elif opt in ("-c", "--percent"):
 			percent = True
+		elif opt in ("-v", "--average"):
+			wantaverage = True
 	if keep > dice:
 		print "Can't have keep be more than the number of dice you roll \n"
 		usage()
 		sys.exit(5)
 	increment = 0
+	average = 0
 	if percent:
 		increment = float(1.0 / runs)
 	else:
@@ -115,6 +121,7 @@ def main(argv):
 		for k in xrange(keep):
 			result += sortz[k]
 		result += weight
+		average += float(result * 1.0 / runs)
 		runDist[result] = runDist.get(result, 0) + increment
 		currentRun = []
 	if comparison:
@@ -122,7 +129,9 @@ def main(argv):
 		for i in runDist:
 			if i >= btarget and i <= ltarget:
 				odds += runDist[i]
-		print odds
+		print 'Chance: ' + str(odds)
+	if wantaverage:
+		print 'Average: ' + str(average)
 	if printz:
 		print runDist
 	else:
@@ -146,21 +155,22 @@ def main(argv):
 #Functions to help people trying to learn how to use the command
 def help():
 	print "This is a program that is used to roll keep ten dice\n"
-	print "Commands \n"
-	print "-h --help    Display commands\n"
-	print "-r --roll    Choose number of dice to roll\n"
-	print "-k --keep    Choose number of dice to keep\n"
-	print "-w --weight  Add weight to the end result. Essentially the +X of the roll.\n"
-	print "-e [e/r/n]   Set behaviour of exploding tens. (E)xploding, (R)eroll, (N)one\n"
-	print "-n --number  Choose the number of times to do roll (default 10000).\n"
-	print "-c --percent Show results in percentages.\n"
-	print "-b --better  Show chance that you will roll equal to or greater than value.\n"
-	print "-l --less    Show chance that you will roll less than or equal to value.\n"
-	print "-p --print   Output to stdout instead of file .\n"
-	print "-o --output  Choose file to output to (default is output.png).\n"
-	print "-t --temp    Don't save to file just display\n"
+	print "Commands\n"
+	print "-h --help    Display commands"
+	print "-r --roll    Choose number of dice to roll"
+	print "-k --keep    Choose number of dice to keep"
+	print "-w --weight  Add weight to the end result. Essentially the +X of the roll."
+	print "-e [e/r/n]   Set behaviour of exploding tens. (E)xploding, (R)eroll, (N)one"
+	print "-n --number  Choose the number of times to do roll (default 10000)."
+	print "-c --percent Show results in percentages."
+	print "-b --better  Show chance that you will roll equal to or greater than value."
+	print "-l --less    Show chance that you will roll less than or equal to value."
+	print "-v --average Show the average roll result."
+	print "-p --print   Output to stdout instead of file ."
+	print "-o --output  Choose file to output to (default is output.png)."
+	print "-t --temp    Don't save to file just display"
 def usage():
-	print "You are not using the proper format for input\n"
+	print "You are not using the proper format for input"
 	help()
 
 
