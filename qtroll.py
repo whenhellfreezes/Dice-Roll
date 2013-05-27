@@ -35,8 +35,7 @@ class RollDice(QtGui.QWidget):
 				commandtext += " -e e"
 			else:
 				commandtext += " -e n"
-		if commandtext:
-			commandtext += " -c -v -t"
+		commandtext += " -c -v -t"
 		command = shlex.split("./roll.py " + str(commandtext))
 		stdout_string = subprocess.check_output(command)
 		attempt = shlex.split(stdout_string)
