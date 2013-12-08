@@ -29,7 +29,7 @@ class RollDice(QtGui.QWidget):
 			commandtext += " -l "+self.lesserEdit.text()
 			wantChance = True
 		if self.runsEdit.text():
-			commandtext += " -n "+self.lesserEdit.text()
+			commandtext += " -n "+self.runsEdit.text()
 		if self.rolltype != Constant.REROLL:
 			if self.rolltype == Constant.EXPLODING:
 				commandtext += " -e e"
